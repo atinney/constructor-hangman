@@ -43,7 +43,13 @@ function secretWord(word) {
     console.log(workingWord.toString());
   };
 
-
+  this.updateWord = function(letter){
+    for (i=0; i < workingWord.length; i++) {
+      if (workingWord[i] == letter) {
+        workingWord[i] = letter;
+      }
+    }
+  };
 }
 
 // // * `printWord`: Prototype which prints out the word
@@ -61,17 +67,20 @@ function pickSecretWord () {
   chosenWord = words[randomWordID];
 }
 
-var newWord = function() {
+
+function initializeFirstGame () {
   //picks new word
   pickSecretWord();
 
   //creates a new object with the word chosen
   var wordObject = new secretWord(chosenWord);
   wordObject.createWorkingWord();
+  wordObject.printWord();
 }
 
 
 var playGame = function() {
+
   // if statement to check whether user has won yet or not
   if (temp < workingWord.length) {
     // runs inquirer and asks the user a series of questions whose replies are
@@ -82,20 +91,25 @@ var playGame = function() {
         message: "Guess a letter: "
       }
     ]).then(function(guessedLetter) {
-      console.log(guessedLetter.letter);
-      wordObject.printWord();
+      wordObject.updateWord(guessedLetter.letter);
       temp++;
       playGame();
     });
   }
   else {
     console.log("You're done with this word!");
-    newWord();
+    //picks new word
+    pickSecretWord();
+
+    //creates a new object with the word chosen
+    var wordObject = new secretWord(chosenWord);
+    wordObject.createWorkingWord();
+    wordObject.printWord();
   }
 
 };
 
-newWord();
+initializeFirstGame();
 playGame();
 
 // wordObject.createSecretWord();
