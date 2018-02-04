@@ -1,7 +1,7 @@
 {
   "name": "Constructor Hangman",
   "version": "1.0.0",
-  "description": "This application will gather weather data and address information for any landmark or location.",
+  "description": "This application will play hangman in the console.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

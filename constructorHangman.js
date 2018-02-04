@@ -17,30 +17,39 @@ var inquirer = require("inquirer");
 // array of words
 var words = ["ocean","ship","helm","deck","sail","wind","keel","rudder","captain"];
 
+// global variable to store the chosen word
+var chosenWord = "";
+var workingWord = [];
+var temp = 0;
+var guessedLetterArray = [];
+var guessesLimit = 0;
 
 // constructor function used to create the word to be played
 function secretWord(word) {
   this.word = word;
-  this.guessesLeft = guessesLeft;
 
   // creates an array of "-" representing the number of spaces for the secret word
-  this.createSecretWord = function(){
-    console.log("This will be a function to create and print a new word with spaces");
+  this.createWorkingWord = function(){
+    workingWord = word.split("");
+    for(var key in workingWord) {
+        workingWord[key] = "-";
+      }
+    //set the number of guesses left
+    guessesLeft = workingWord.length;
   };
+
+  // prints whatever is in the working word
+  this.printWord = function(){
+    console.log(workingWord.toString());
+  };
+
 
 }
 
-// * `printWord`: Prototype which prints out the word
+// // * `printWord`: Prototype which prints out the word
 // secretWord.prototype.printWord = function() {
-//   console.log("");
+  
 // };
-
-
-// var printWord = function() {
-//   for(var key in word) {
-//         word[key].printStats();
-//       }
-// }
 
 
 
@@ -48,9 +57,46 @@ function pickSecretWord () {
   // Generate a random number between 0 and the length of the words array
   var randomWordID =  Math.floor(Math.random()*(words.length)+0);
 
-  // Get the word that's at that index
-  var chosenWord = words[randomWordID];
+  // Get the word that's at that index and store it in the global variable for chosenWord
+  chosenWord = words[randomWordID];
+}
+
+var newWord = function() {
+  //picks new word
+  pickSecretWord();
+
+  //creates a new object with the word chosen
+  var wordObject = new secretWord(chosenWord);
+  wordObject.createWorkingWord();
 }
 
 
-pickSecretWord();
+var playGame = function() {
+  // if statement to check whether user has won yet or not
+  if (temp < workingWord.length) {
+    // runs inquirer and asks the user a series of questions whose replies are
+    // stored within the variable answers inside of the .then statement
+    inquirer.prompt([
+      {
+        name: "letter",
+        message: "Guess a letter: "
+      }
+    ]).then(function(guessedLetter) {
+      console.log(guessedLetter.letter);
+      wordObject.printWord();
+      temp++;
+      playGame();
+    });
+  }
+  else {
+    console.log("You're done with this word!");
+    newWord();
+  }
+
+};
+
+newWord();
+playGame();
+
+// wordObject.createSecretWord();
+// wordObject.printWord();
